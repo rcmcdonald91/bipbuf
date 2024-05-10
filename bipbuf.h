@@ -72,7 +72,7 @@ static inline size_t bipbuf_write_avail(bipbuf_t *bipbuf) {
     size_t avail;
 
     (void) bipbuf_write_aquire(bipbuf, &avail);
-	bipbuf_write_release(bipbuf, 0); /* just peeking */
+    bipbuf_write_release(bipbuf, 0); /* just peeking */
 
     return (avail);
 }
