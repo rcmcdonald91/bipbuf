@@ -35,128 +35,128 @@ static void bipbuf_reset(bipbuf_t *, bool);
 int
 bipbuf_init(bipbuf_t *bipbuf, size_t size)
 {
-	return (bipbuf_init_ex(bipbuf, size, false));
+    return (bipbuf_init_ex(bipbuf, size, false));
 }
 
 int
 bipbuf_init_ex(bipbuf_t *bipbuf, size_t size, bool zerofill)
 {
-	if ((bipbuf->buf = (uint8_t *)malloc(size)) == NULL)
-		return (-1);
+    if ((bipbuf->buf = (uint8_t *)malloc(size)) == NULL)
+        return (-1);
 
-	bipbuf->size = size;
+    bipbuf->size = size;
 
-	bipbuf_reset(bipbuf, zerofill);
+    bipbuf_reset(bipbuf, zerofill);
 
-	return (0);
+    return (0);
 }
 
 void
 bipbuf_free_ex(bipbuf_t *bipbuf, bool zerofill)
 {
-	if (bipbuf->buf) {
-		bipbuf_reset(bipbuf, zerofill);
-		free(bipbuf->buf);
+    if (bipbuf->buf) {
+        bipbuf_reset(bipbuf, zerofill);
+        free(bipbuf->buf);
 	}
 }
 
 void
 bipbuf_free(bipbuf_t *bipbuf)
 {
-	return (bipbuf_free_ex(bipbuf, false));
+    return (bipbuf_free_ex(bipbuf, false));
 }
 
 uint8_t *
 bipbuf_write_aquire(bipbuf_t *bipbuf, size_t *avail)
 {
-	size_t free;
+    size_t free;
 
-	*avail = 0;
+    *avail = 0;
 
-	if (bipbuf->bsize) {
-		free = bipbuf->astart - bipbuf->bstart - bipbuf->bsize;
-		if (!free)
-			return (NULL);
+    if (bipbuf->bsize) {
+        free = bipbuf->astart - bipbuf->bstart - bipbuf->bsize;
+        if (!free)
+            return (NULL);
 
-		bipbuf->rstart = bipbuf->bstart + bipbuf->bsize;
-		bipbuf->rsize = free;
+        bipbuf->rstart = bipbuf->bstart + bipbuf->bsize;
+        bipbuf->rsize = free;
 
-		goto done;
+        goto done;
 	}
 
-	free = bipbuf->size - bipbuf->astart - bipbuf->asize;
-	if (free >= bipbuf->astart) {
-		if (!free)
-			return (NULL);
+    free = bipbuf->size - bipbuf->astart - bipbuf->asize;
+    if (free >= bipbuf->astart) {
+        if (!free)
+            return (NULL);
 
-		bipbuf->rstart = bipbuf->astart + bipbuf->asize;
-		bipbuf->rsize = free;
+        bipbuf->rstart = bipbuf->astart + bipbuf->asize;
+        bipbuf->rsize = free;
 
-		goto done;
-	}
+        goto done;
+    }
 
-	bipbuf->rstart = 0;
-	bipbuf->rsize = bipbuf->astart;
+    bipbuf->rstart = 0;
+    bipbuf->rsize = bipbuf->astart;
 
 done:
-	*avail = free;
+    *avail = free;
 
-	return (&bipbuf->buf[bipbuf->rstart]);
+    return (&bipbuf->buf[bipbuf->rstart]);
 }
 
 void
 bipbuf_write_release(bipbuf_t *bipbuf, size_t written)
 {
-	if (!written)
-		goto done;
+    if (!written)
+        goto done;
 
-	if (!bipbuf->asize && !bipbuf->bsize) {
-		bipbuf->astart = bipbuf->rstart;
-		bipbuf->asize = written;
-		goto done;
+    if (!bipbuf->asize && !bipbuf->bsize) {
+        bipbuf->astart = bipbuf->rstart;
+        bipbuf->asize = written;
+        goto done;
 	}
 
-	if (bipbuf->rstart == (bipbuf->astart + bipbuf->asize))
-		bipbuf->asize += written;
-	else
-		bipbuf->bsize += written;
+    if (bipbuf->rstart == (bipbuf->astart + bipbuf->asize))
+        bipbuf->asize += written;
+    else
+        bipbuf->bsize += written;
 
 done:
-	bipbuf->rstart = bipbuf->rsize = 0;
+    bipbuf->rstart = bipbuf->rsize = 0;
 }
 
 uint8_t *
 bipbuf_read_aquire(bipbuf_t *bipbuf, size_t *avail)
 {
-	*avail = 0;
-	if (!bipbuf->asize)
-		return (NULL);
+    *avail = 0;
+    if (!bipbuf->asize)
+        return (NULL);
 
-	*avail = bipbuf->asize;
+    *avail = bipbuf->asize;
 
-	return (&bipbuf->buf[bipbuf->astart]);
+    return (&bipbuf->buf[bipbuf->astart]);
 }
 
 void
 bipbuf_read_release_ex(bipbuf_t *bipbuf, size_t read, bool zerofill)
 {
-	if (zerofill)
-		(void) memset(&bipbuf->buf[bipbuf->astart], '\0', read);
+    if (zerofill)
+        (void) memset(&bipbuf->buf[bipbuf->astart], '\0', read);
 
-	if (read < bipbuf->asize) {
-		bipbuf->asize -= read;
-		bipbuf->astart += read;
-	} else {
-		bipbuf->astart = bipbuf->bstart;
-		bipbuf->asize = bipbuf->bsize;
-		bipbuf->bstart = bipbuf->bsize = 0;
-	}
+    if (read < bipbuf->asize) {
+        bipbuf->asize -= read;
+        bipbuf->astart += read;
+    } else {
+        bipbuf->astart = bipbuf->bstart;
+        bipbuf->asize = bipbuf->bsize;
+        bipbuf->bstart = bipbuf->bsize = 0;
+    }
 }
 
 void
 bipbuf_read_release(bipbuf_t *bipbuf, size_t read)
 {
-	return (bipbuf_read_release_ex(bipbuf, read, false));
+    return (bipbuf_read_release_ex(bipbuf, read, false));
 }
 
 extern inline size_t bipbuf_read_avail(bipbuf_t *);
@@ -165,10 +165,10 @@ extern inline size_t bipbuf_write_avail(bipbuf_t *);
 static void
 bipbuf_reset(bipbuf_t *bipbuf, bool zerofill)
 {
-	if (zerofill)
-		(void) memset(bipbuf->buf, '\0', bipbuf->size);
+    if (zerofill)
+	    (void) memset(bipbuf->buf, '\0', bipbuf->size);
 
-	bipbuf->astart = bipbuf->asize = 0;
-	bipbuf->bstart = bipbuf->bsize = 0;
-	bipbuf->rstart = bipbuf->rsize = 0;
+    bipbuf->astart = bipbuf->asize = 0;
+    bipbuf->bstart = bipbuf->bsize = 0;
+    bipbuf->rstart = bipbuf->rsize = 0;
 }
