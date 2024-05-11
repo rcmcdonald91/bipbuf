@@ -148,6 +148,7 @@ uint8_t *bipbuf_peek(bipbuf_t *bipbuf, size_t offset, size_t *avail)
 done:
     return (&bipbuf->buf[pstart]);
 }
+
 uint8_t *
 bipbuf_read_aquire(bipbuf_t *bipbuf, size_t *avail)
 {
