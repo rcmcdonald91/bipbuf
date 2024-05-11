@@ -33,12 +33,6 @@
 static void bipbuf_reset(bipbuf_t *, bool);
 
 int
-bipbuf_init(bipbuf_t *bipbuf, size_t size)
-{
-    return (bipbuf_init_ex(bipbuf, size, false));
-}
-
-int
 bipbuf_init_ex(bipbuf_t *bipbuf, size_t size, bool zerofill)
 {
     if ((bipbuf->buf = (uint8_t *)malloc(size)) == NULL)
@@ -49,6 +43,12 @@ bipbuf_init_ex(bipbuf_t *bipbuf, size_t size, bool zerofill)
     bipbuf_reset(bipbuf, zerofill);
 
     return (0);
+}
+
+int
+bipbuf_init(bipbuf_t *bipbuf, size_t size)
+{
+    return (bipbuf_init_ex(bipbuf, size, false));
 }
 
 void
