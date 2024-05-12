@@ -125,7 +125,8 @@ done:
     bipbuf->rstart = bipbuf->rsize = 0;
 }
 
-uint8_t *bipbuf_peek(bipbuf_t *bipbuf, size_t offset, size_t *avail)
+uint8_t *
+bipbuf_peek(bipbuf_t *bipbuf, size_t offset, size_t *avail)
 {
     size_t pstart;
 
@@ -137,7 +138,7 @@ uint8_t *bipbuf_peek(bipbuf_t *bipbuf, size_t offset, size_t *avail)
         goto done;
     }
 
-    if (!bipbuf-bsize)
+    if (!bipbuf->bsize)
         return (NULL);
 
     offset -= bipbuf->asize;
@@ -181,6 +182,28 @@ void
 bipbuf_read_release(bipbuf_t *bipbuf, size_t read)
 {
     return (bipbuf_read_release_ex(bipbuf, read, false));
+}
+
+size_t
+bipbuf_squash(bipbuf_t *bipbuf)
+{
+    uint8_t *readptr, *writeptr;
+    size_t readavail, writeavail;
+
+    readptr = bipbuf_read_aquire(bipbuf, &readavail);
+    writeptr = bipbuf_write_aquire(bipbuf, &writeavail);
+    if (!(readptr && writeptr))
+        return (0);
+
+    if (readavail > writeavail))
+        readavail = 0; /* can't relocate to head */
+
+    (void) memcpy(writeptr, readptr, readavail);
+
+    bipbuf_write_release(bipbuf, readavail);
+    bipbuf_read_release(bipbuf, readavail);
+
+    return (readavail);
 }
 
 extern inline size_t bipbuf_read_avail(bipbuf_t *);
