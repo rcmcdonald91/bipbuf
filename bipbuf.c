@@ -79,7 +79,6 @@ bipbuf_write_aquire(bipbuf_t *bipbuf, size_t *avail)
             return (NULL);
 
         bipbuf->rstart = bipbuf->bstart + bipbuf->bsize;
-        bipbuf->rsize = free;
 
         goto done;
 	}
@@ -90,13 +89,11 @@ bipbuf_write_aquire(bipbuf_t *bipbuf, size_t *avail)
             return (NULL);
 
         bipbuf->rstart = bipbuf->astart + bipbuf->asize;
-        bipbuf->rsize = free;
 
         goto done;
     }
 
     bipbuf->rstart = 0;
-    bipbuf->rsize = bipbuf->astart;
 
 done:
     *avail = free;
@@ -122,7 +119,7 @@ bipbuf_write_release(bipbuf_t *bipbuf, size_t written)
         bipbuf->bsize += written;
 
 done:
-    bipbuf->rstart = bipbuf->rsize = 0;
+    bipbuf->rstart = 0;
 }
 
 uint8_t *
@@ -217,5 +214,5 @@ bipbuf_reset(bipbuf_t *bipbuf, bool zerofill)
 
     bipbuf->astart = bipbuf->asize = 0;
     bipbuf->bstart = bipbuf->bsize = 0;
-    bipbuf->rstart = bipbuf->rsize = 0;
+    bipbuf->rstart = 0;
 }
