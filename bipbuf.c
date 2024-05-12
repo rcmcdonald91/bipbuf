@@ -126,31 +126,6 @@ done:
 }
 
 uint8_t *
-bipbuf_peek(bipbuf_t *bipbuf, size_t offset, size_t *avail)
-{
-    size_t pstart;
-
-    *avail = 0;
-
-    pstart = bipbuf->astart + offset;
-    if (pstart < (bipbuf->astart + bipbuf->asize)) {
-        *avail = bipbuf->asize - offset;
-        goto done;
-    }
-
-    if (!bipbuf->bsize)
-        return (NULL);
-
-    offset -= bipbuf->asize;
-    pstart = bipbuf->bstart + offset;
-
-    *avail = bipbuf->bsize - offset;
-
-done:
-    return (&bipbuf->buf[pstart]);
-}
-
-uint8_t *
 bipbuf_read_aquire(bipbuf_t *bipbuf, size_t *avail)
 {
     *avail = 0;
@@ -182,6 +157,31 @@ void
 bipbuf_read_release(bipbuf_t *bipbuf, size_t read)
 {
     return (bipbuf_read_release_ex(bipbuf, read, false));
+}
+
+uint8_t *
+bipbuf_peek(bipbuf_t *bipbuf, size_t offset, size_t *avail)
+{
+    size_t pstart;
+
+    *avail = 0;
+
+    pstart = bipbuf->astart + offset;
+    if (pstart < (bipbuf->astart + bipbuf->asize)) {
+        *avail = bipbuf->asize - offset;
+        goto done;
+    }
+
+    if (!bipbuf->bsize)
+        return (NULL);
+
+    offset -= bipbuf->asize;
+    pstart = bipbuf->bstart + offset;
+
+    *avail = bipbuf->bsize - offset;
+
+done:
+    return (&bipbuf->buf[pstart]);
 }
 
 size_t
