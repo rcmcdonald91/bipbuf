@@ -55,11 +55,12 @@ void bipbuf_free_ex(bipbuf_t *, bool);
 uint8_t *bipbuf_write_aquire(bipbuf_t *, size_t *);
 void bipbuf_write_release(bipbuf_t *, size_t);
 
-uint8_t *bipbuf_peek(bipbuf_t *, size_t, size_t *);
-
 uint8_t *bipbuf_read_aquire(bipbuf_t *, size_t *);
 void bipbuf_read_release(bipbuf_t *, size_t);
 void bipbuf_read_release_ex(bipbuf_t *, size_t, bool);
+
+size_t bipbuf_squash(bipbuf_t *);
+uint8_t *bipbuf_peek(bipbuf_t *, size_t, size_t *);
 
 static inline size_t bipbuf_read_avail(bipbuf_t *bipbuf) {
     size_t avail;
