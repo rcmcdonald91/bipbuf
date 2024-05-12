@@ -42,8 +42,8 @@ typedef struct bipbuf {
     uint8_t *buf;
     size_t size;
     size_t astart, asize,
-           bstart, bsize,
-           rstart, rsize;
+           bstart, bsize;
+    size_t rstart;
 } bipbuf_t;
 
 int bipbuf_init(bipbuf_t *, size_t);
