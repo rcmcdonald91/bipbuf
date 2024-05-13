@@ -62,7 +62,7 @@ void bipbuf_read_release_ex(bipbuf_t *, size_t, bool);
 uint8_t *bipbuf_peek(bipbuf_t *, size_t, size_t *);
 size_t bipbuf_squash(bipbuf_t *);
 
-static inline size_t bipbuf_read_avail(bipbuf_t *bipbuf) {
+inline size_t bipbuf_read_avail(bipbuf_t *bipbuf) {
     size_t avail;
 
     (void) bipbuf_read_aquire(bipbuf, &avail);
@@ -71,7 +71,7 @@ static inline size_t bipbuf_read_avail(bipbuf_t *bipbuf) {
     return (avail);
 }
 
-static inline size_t bipbuf_write_avail(bipbuf_t *bipbuf) {
+inline size_t bipbuf_write_avail(bipbuf_t *bipbuf) {
     size_t avail;
 
     (void) bipbuf_write_aquire(bipbuf, &avail);
